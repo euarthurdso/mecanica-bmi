@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compra de Horas</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(255, 115, 0, 0.12), transparent 35%),
+        #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      color: white;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      background: #0b0b0d;
+      border: 1px solid #242428;
+      border-radius: 24px;
+      padding: 34px 28px 24px;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+        0 20px 50px rgba(0, 0, 0, 0.55),
+        0 0 30px rgba(255, 102, 0, 0.08);
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff6b00;
+      font-size: 36px;
+      margin-bottom: 28px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ff8a2a;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #2d2f36;
+      background: #151618;
+      color: white;
+      font-size: 15px;
+      transition: 0.2s ease;
+    }
+
+    input,
+    select {
+      height: 48px;
+      padding: 0 15px;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #858a93;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #ff7a1a;
+      box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.12);
+    }
+
+    button {
+      height: 48px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ff7818, #ff9730);
+      box-shadow: 0 8px 20px rgba(255, 120, 24, 0.2);
+    }
+
+    button:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    .values-box {
+      margin: 10px 0 18px;
+      background: linear-gradient(180deg, #090a0c, #050607);
+      border: 1px solid #23252b;
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .values-box p {
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .sub-box {
+      margin-top: 12px;
+      background: #101114;
+      border: 1px solid #252831;
+      border-radius: 16px;
+      padding: 15px;
+    }
+
+    .sub-box p {
+      line-height: 1.6;
+    }
+
+    .sub-box strong {
+      color: #ff9a3d;
+    }
+
+    .qr-box {
+      text-align: center;
+    }
+
+    .qr-img {
+      width: 220px;
+      max-width: 100%;
+      border-radius: 16px;
+      border: 1px solid #2f323a;
+      margin-top: 10px;
+    }
+
+    .send-btn {
+      margin-top: 10px;
+    }
+
+    .status {
+      margin-top: 16px;
+      background: #101114;
+      border: 1px solid #23262c;
+      border-radius: 14px;
+      padding: 13px 14px;
+      color: #d4d4d4;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 720px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 26px 18px 20px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Compra de Horas</h1>
+
+    <div class="row">
+      <div class="field">
+        <label for="id">ID</label>
+        <input id="id" type="text" placeholder="Digite seu ID">
+      </div>
+
+      <div class="field">
+        <label for="discord">ID do Discord</label>
+        <input id="discord" type="text" placeholder="Digite o ID do Discord">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="horas">Quantidade de horas</label>
+      <input id="horas" type="number" min="1" step="1" placeholder="Digite quantas horas deseja comprar" oninput="atualizarValorHoras()">
+    </div>
+
+    <div class="values-box">
+      <p id="valorHoras">Valor total: -</p>
+      <p>1 hora = R$ 1,00</p>
+    </div>
+
+    <div class="field">
+      <label for="pagamento">Forma de pagamento</label>
+      <select id="pagamento" onchange="mostrarOpcao()">
+        <option value="">Selecione</option>
+        <option value="pix">PIX</option>
+      </select>
+    </div>
+
+    <div id="pixDiv" class="hidden">
+      <div class="field">
+        <label for="tipoPix">Opção PIX</label>
+        <select id="tipoPix" onchange="mostrarPix(this.value)">
+          <option value="">Escolha</option>
+          <option value="copia">PIX copia e cola</option>
+          <option value="qr">QR Code</option>
+        </select>
+      </div>
+
+      <div id="copia" class="hidden sub-box">
+        <p><strong>Chave PIX:</strong></p>
+        <p id="chavePixTexto">976aa9d5-9a78-4eab-810a-edc839aae2e9</p>
+      </div>
+
+      <div id="qr" class="hidden sub-box qr-box">
+        <p><strong>QR Code:</strong></p>
+        <img src="qrcode.jpeg" alt="QR Code PIX" class="qr-img">
+      </div>
+
+      <button type="button" onclick="confirmarPix()">Confirmar Pagamento</button>
+
+      <div id="comprovantePix" class="hidden">
+        <div class="field" style="margin-top: 12px;">
+          <label for="printPixConfirmado">Comprovante PIX</label>
+          <input type="file" id="printPixConfirmado" accept="image/*">
+        </div>
+
+        <div class="field">
+          <label for="vendedor">Quem vendeu as horas</label>
+          <input id="vendedor" type="text" placeholder="Nome de quem vendeu">
+        </div>
+      </div>
+    </div>
+
+    <button class="send-btn" onclick="enviar()">Enviar Solicitação</button>
+
+    <div id="status" class="status">Aguardando envio...</div>
+  </div>
+
+  <script>
+    const webhook = "https://discordapp.com/api/webhooks/1487987170089107558/qkLHXSb3vaRfiR74wSg6gkUr882gqTjYVvEfrDn27heDnhvzwjbv66XdFXMDMFIQQXXv";
+    const CLOUD_NAME = "dci9bcb1u";
+    const UPLOAD_PRESET = "mecanica";
+
+    let valorTotal = 0;
+
+    function setStatus(texto) {
+      document.getElementById("status").innerText = texto;
+    }
+
+    function atualizarValorHoras() {
+      const horas = parseInt(document.getElementById("horas").value, 10) || 0;
+      valorTotal = horas * 1;
+
+      document.getElementById("valorHoras").innerText =
+        horas > 0
+          ? "Valor total: R$ " + valorTotal.toFixed(2).replace(".", ",")
+          : "Valor total: -";
+    }
+
+    function mostrarOpcao() {
+      const tipo = document.getElementById("pagamento").value;
+      document.getElementById("pixDiv").classList.add("hidden");
+
+      if (tipo === "pix") {
+        document.getElementById("pixDiv").classList.remove("hidden");
+      }
+    }
+
+    function mostrarPix(valor) {
+      document.getElementById("copia").classList.add("hidden");
+      document.getElementById("qr").classList.add("hidden");
+
+      if (valor === "copia") {
+        document.getElementById("copia").classList.remove("hidden");
+      }
+
+      if (valor === "qr") {
+        document.getElementById("qr").classList.remove("hidden");
+      }
+    }
+
+    function confirmarPix() {
+      document.getElementById("comprovantePix").classList.remove("hidden");
+    }
+
+    async function uploadImagem(file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (!data.secure_url) {
+        throw new Error("Erro no upload da imagem");
+      }
+
+      return data.secure_url;
+    }
+
+    async function enviar() {
+      try {
+        const id = document.getElementById("id").value.trim();
+        const discord = document.getElementById("discord").value.trim();
+        const horas = parseInt(document.getElementById("horas").value, 10) || 0;
+        const tipo = document.getElementById("pagamento").value;
+        const vendedor = document.getElementById("vendedor")?.value.trim() || "N/A";
+
+        if (!id || !discord || !horas || !tipo) {
+          alert("Preencha ID, ID do Discord, quantidade de horas e forma de pagamento.");
+          return;
+        }
+
+        const file = document.getElementById("printPixConfirmado").files[0];
+        let imagemURL = "";
+
+        if (file) {
+          setStatus("Enviando comprovante...");
+          imagemURL = await uploadImagem(file);
+          setStatus("Comprovante enviado ✅");
+        }
+
+        setStatus("Enviando para o Discord...");
+
+        const mensagem = {
+          username: "Compre Cargo Mecânica BMI",
+          embeds: [
+            {
+              title: "⏱️ Nova Compra de Horas",
+              color: 0xf97316,
+              description:
+                "**📅 Data:** " + new Date().toLocaleString("pt-BR") + "\n" +
+                "**🆔 ID:** " + id + "\n" +
+                "**👤 Discord:** <@" + discord + ">\n" +
+                "**⏰ Horas compradas:** " + horas + "\n" +
+                "**💳 Pagamento:** PIX\n" +
+                "**💵 Valor total:** R$ " + valorTotal.toFixed(2).replace(".", ",") + "\n" +
+                "**🧑‍💼 Vendedor:** " + vendedor,
+              image: imagemURL ? { url: imagemURL } : undefined,
+              footer: {
+                text: "Sistema automático - Mecânica BMI"
+              }
+            }
+          ]
+        };
+
+        const resposta = await fetch(webhook, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(mensagem)
+        });
+
+        if (!resposta.ok) {
+          throw new Error("Erro no webhook: " + resposta.status);
+        }
+
+        setStatus("Enviado com sucesso ✅");
+        alert("Enviado com sucesso 🔥");
+
+      } catch (erro) {
+        console.error(erro);
+        setStatus("Erro ao enviar ❌\n" + erro.message);
+        alert("Erro ao enviar ❌");
+      }
+    }
+  </script>
+
+</body>
+</html>
