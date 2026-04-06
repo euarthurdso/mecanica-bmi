@@ -364,9 +364,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (key === "Tipo") continue;
 
                     if (!(value instanceof File) && String(value).trim() !== '') {
+                        let valorFinal = String(value);
+
+                        if (key.toLowerCase().includes("discord")) {
+                            const id = valorFinal.replace(/\D/g, "");
+                            if (id) {
+                                valorFinal = `<@${id}>`;
+                            }
+                        }
+
                         fieldsPayload.push({
                             name: key.replace(/_/g, ' '),
-                            value: String(value),
+                            value: valorFinal,
                             inline: true
                         });
                     }
