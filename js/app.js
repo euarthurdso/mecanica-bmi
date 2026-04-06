@@ -10,9 +10,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // CONFIGURAÇÕES EXTERNAS
-    const webhookUrl = "SEU_WEBHOOK_AQUI";
-    const CLOUDINARY_CLOUD_NAME = "SEU_CLOUD_NAME";
-    const CLOUDINARY_UPLOAD_PRESET = "SEU_UPLOAD_PRESET";
+    const WEBHOOKS = {
+        pagamento: "https://discordapp.com/api/webhooks/1487676588438065203/yW5ZFZvC-zZp_3Bjvxim3V3jpYPxs3NpgW0UJ5bqCbtdhO-U8HVVca0A0Ns5h5qYGdf-",
+        horas: "https://discordapp.com/api/webhooks/1487987170089107558/qkLHXSb3vaRfiR74wSg6gkUr882gqTjYVvEfrDn27heDnhvzwjbv66XdFXMDMFIQQXXv",
+        cargo: "https://discordapp.com/api/webhooks/1487694906326777918/oddww0-WkogVL_fmx7rTgfsfiq0LKOxQj2XhnXRFZb8FCsBqJeewPQQiyYVasZNCygOn"
+    };
+
+    const CLOUDINARY_CLOUD_NAME = "dci9bcb1u";
+    const CLOUDINARY_UPLOAD_PRESET = "mecanica";
 
     async function uploadToCloudinary(file) {
         const formData = new FormData();
@@ -51,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Close menu when clicking a link
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileNav.classList.remove('open');
@@ -70,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sections.forEach(section => {
             const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 150; // Offset for sticky nav
+            const sectionTop = section.offsetTop - 150;
             
             if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
                 current = section.getAttribute('id');
@@ -92,23 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active classes
             tabBtns.forEach(b => b.classList.remove('active'));
             formPanels.forEach(p => p.classList.add('hidden'));
             
-            // hide success if visible
-            if(successMsg) successMsg.classList.add('hidden'); 
+            if (successMsg) successMsg.classList.add('hidden');
 
-            // Add active to clicked and show corresponding panel
             btn.classList.add('active');
             const targetId = btn.getAttribute('data-tab');
             const targetPanel = document.getElementById(targetId);
             
             if (targetPanel) {
                 targetPanel.classList.remove('hidden');
-                // Adicionando leve fadIn animado
                 targetPanel.style.animation = 'none';
-                targetPanel.offsetHeight; /* trigger reflow */
+                targetPanel.offsetHeight;
                 targetPanel.style.animation = 'fadeIn 0.5s ease forwards';
             }
         });
@@ -165,13 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const cupomInput = document.getElementById('cupom-cargo-input');
     const btnCupom = document.getElementById('btn-aplicar-cupom');
     const cupomMsg = document.getElementById('cupom-msg');
-    let descActive = 0; // Desconto em Porcentagem
+    let descActive = 0;
 
     if (btnCupom && cupomInput) {
         btnCupom.addEventListener('click', () => {
             const val = cupomInput.value.trim().toUpperCase();
             if (val === 'MECPASCOA30') {
-                descActive = 0.30; // 30%
+                descActive = 0.30;
                 cupomMsg.innerText = '🐰 Cupom de 30% Aplicado com Sucesso!';
                 cupomMsg.style.color = '#10B981';
             } else if (val !== '') {
@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let basePix = parseFloat(opt.getAttribute('data-pix'));
         
         if (descActive > 0) {
-            basePix = basePix - (basePix * descActive); // Desconto real PIX
-            baseIg = baseIg - (baseIg * descActive); // Desconto no In-game (calculado automaticamente)
+            basePix = basePix - (basePix * descActive);
+            baseIg = baseIg - (baseIg * descActive);
         }
         
         const fmtPix = `R$ ${basePix.toFixed(2).replace('.', ',')}`;
@@ -241,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (uiIg) uiIg.classList.remove('hidden');
                     if (uiPix) uiPix.classList.add('hidden');
                     
-                    // Desabilita os campos de Pix para nao trancar o formulário requerindo-os invisiveis
                     if (opcaoPixSelect) opcaoPixSelect.setAttribute('disabled', 'true');
                     if (compIg) compIg.setAttribute('required', 'true');
                     if (compPix) compPix.removeAttribute('required');
@@ -270,9 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupPaymentToggles('horas');
     setupPaymentToggles('cargo');
 
-    // Remove any previously inserted error messages when typing/selecting
     document.addEventListener('input', (e) => {
-        if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
             e.target.style.borderColor = '';
             const errorSpan = e.target.nextElementSibling;
             if (errorSpan && errorSpan.classList.contains('error-msg')) {
@@ -288,11 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let isValid = true;
             const elements = form.querySelectorAll('input[required], select[required]');
             
-            // Custom Validation Engine
             elements.forEach(el => {
-                // Clear previous errors safely
                 const prevError = el.nextElementSibling;
-                if(prevError && prevError.classList.contains('error-msg')) {
+                if (prevError && prevError.classList.contains('error-msg')) {
                     prevError.remove();
                 }
 
@@ -300,7 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     isValid = false;
                     el.style.borderColor = '#ff3333';
                     
-                    // Inject visual error
                     const errorSpan = document.createElement('span');
                     errorSpan.className = 'error-msg';
                     errorSpan.style.color = '#ff3333';
@@ -324,33 +319,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            if(!isValid) return; // Block sub se houver erros nos inputs
+            if (!isValid) return;
 
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
             
-            // Loading State (Botão processando)
             submitBtn.innerHTML = '<i class="ph ph-spinner-gap" style="animation: spin 1s infinite linear;"></i> Processando...';
             submitBtn.disabled = true;
 
             try {
-                // Montando o payload do painel para o Discord
                 let fieldsPayload = [];
                 const formData = new FormData(form);
                 let tipo = form.querySelector('input[name="Tipo"]')?.value || "Novo Protocolo BMI";
 
+                let webhookUrl = WEBHOOKS.pagamento;
+
                 if (tipo.toLowerCase().includes("pagamento")) {
+                    webhookUrl = WEBHOOKS.pagamento;
                     tipo = "💰 Solicitação de Pagamento";
                 } else if (tipo.toLowerCase().includes("horas")) {
+                    webhookUrl = WEBHOOKS.horas;
                     tipo = "⏱️ Compra de Horas";
                 } else if (tipo.toLowerCase().includes("cargo")) {
+                    webhookUrl = WEBHOOKS.cargo;
                     tipo = "🧾 Compra de Cargo";
                 }
 
                 const fileInputs = form.querySelectorAll('input[type="file"]');
                 const uploadedFileUrls = [];
 
-                // Envia todos os arquivos para o Cloudinary primeiro
                 for (const fileInput of fileInputs) {
                     if (fileInput.files.length > 0) {
                         const file = fileInput.files[0];
@@ -375,7 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // Adiciona links dos comprovantes enviados ao Cloudinary
                 uploadedFileUrls.forEach(fileData => {
                     fieldsPayload.push({
                         name: `📎 ${fileData.nomeCampo.replace(/_/g, ' ')}`,
@@ -386,13 +382,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const embedObj = {
                     title: tipo,
-                    color: 16739072, // Laranja
+                    color: 16739072,
                     fields: fieldsPayload,
                     footer: { text: "Sistema Corporativo BMI • Desenvolvido por Oliveira Strategic" },
                     timestamp: new Date().toISOString()
                 };
 
-                // Se existir pelo menos um comprovante, exibe o primeiro no embed
                 if (uploadedFileUrls.length > 0) {
                     embedObj.image = {
                         url: uploadedFileUrls[0].url
@@ -404,8 +399,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     embeds: [embedObj]
                 };
 
-                if (webhookUrl.includes("SEU_WEBHOOK_AQUI")) {
-                    // Modo simulação se o dev não preencheu o link acima
+                if (
+                    webhookUrl.includes("SEU_WEBHOOK") ||
+                    CLOUDINARY_CLOUD_NAME.includes("SEU_CLOUD") ||
+                    CLOUDINARY_UPLOAD_PRESET.includes("SEU_UPLOAD")
+                ) {
                     setTimeout(() => { handleSuccess(); }, 1500);
                 } else {
                     const response = await fetch(webhookUrl, {
@@ -424,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 console.error(error);
-                alert('⚠️ Erro ao enviar para o Discord ou para o Cloudinary. Verifique o webhook, Cloud Name e Upload Preset.');
+                alert('⚠️ Erro ao enviar para o Discord ou para o Cloudinary. Verifique os 3 webhooks, Cloud Name e Upload Preset.');
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
             }
@@ -433,17 +431,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
                 
-                // Ocultar formulários e mostrar painel de sucesso visual
                 formPanels.forEach(p => p.classList.add('hidden'));
                 
-                if(successMsg) {
+                if (successMsg) {
                     successMsg.classList.remove('hidden');
                     successMsg.style.animation = 'none';
                     successMsg.offsetHeight; 
                     successMsg.style.animation = 'fadeIn 0.5s ease forwards';
                 }
                 
-                form.reset(); // Zera o preenchimento para segurança dos logs
+                form.reset();
 
                 if (horasTotal) horasTotal.innerText = 'R$ 0,00';
                 if (horasTotalHidden) horasTotalHidden.value = '';
@@ -460,12 +457,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnVoltar) {
         btnVoltar.addEventListener('click', () => {
             successMsg.classList.add('hidden');
-            // reset to first tab visual states
-            if(tabBtns.length > 0) {
+            if (tabBtns.length > 0) {
                 const firstTabId = tabBtns[0].getAttribute('data-tab');
                 const firstPanel = document.getElementById(firstTabId);
                 
-                if(firstPanel) {
+                if (firstPanel) {
                     firstPanel.classList.remove('hidden');
                     firstPanel.style.animation = 'none';
                     firstPanel.offsetHeight;
@@ -478,8 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Spin animation class for submit process
-    if(!document.getElementById('spin-keyframes')) {
+    if (!document.getElementById('spin-keyframes')) {
         const style = document.createElement('style');
         style.id = 'spin-keyframes';
         style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
@@ -496,7 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
         questionBtn.addEventListener('click', () => {
             const isActive = item.classList.contains('active');
             
-            // Close all other faqs
             faqItems.forEach(otherItem => {
                 otherItem.classList.remove('active');
                 otherItem.querySelector('.faq-answer').style.maxHeight = null;
