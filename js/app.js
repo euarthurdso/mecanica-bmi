@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const CLOUDINARY_CLOUD_NAME = "dci9bcb1u";
-    const CLOUDINARY_UPLOAD_PRESET = "mecanico";
+    const CLOUDINARY_UPLOAD_PRESET = "mecanica";
 
     async function uploadToCloudinary(file) {
         const formData = new FormData();
