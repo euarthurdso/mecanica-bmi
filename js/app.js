@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const WEBHOOKS = {
         pagamento: "https://discordapp.com/api/webhooks/1487676588438065203/yW5ZFZvC-zZp_3Bjvxim3V3jpYPxs3NpgW0UJ5bqCbtdhO-U8HVVca0A0Ns5h5qYGdf-",
         horas: "https://discordapp.com/api/webhooks/1487987170089107558/qkLHXSb3vaRfiR74wSg6gkUr882gqTjYVvEfrDn27heDnhvzwjbv66XdFXMDMFIQQXXv",
-        cargo: "https://discordapp.com/api/webhooks/1487694906326777918/oddww0-WkogVL_fmx7rTgfsfiq0LKOxQj2XhnXRFZb8FCsBqJeewPQQiyYVasZNCygOn",
+        cargo: "https://discordapp.com/api/webhooks/1487694906326777918/oddww0-WkogVL_fmx7rTgfsfiq0LKOxQj2XhnXRFZb8FCsBqJeewPQQiyYVasZNCygOn"
     };
 
     const CLOUDINARY_CLOUD_NAME = "dci9bcb1u";
