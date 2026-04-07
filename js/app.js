@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const WEBHOOKS = {
         pagamento: "https://discordapp.com/api/webhooks/1487676588438065203/yW5ZFZvC-zZp_3Bjvxim3V3jpYPxs3NpgW0UJ5bqCbtdhO-U8HVVca0A0Ns5h5qYGdf-",
         horas: "https://discordapp.com/api/webhooks/1487987170089107558/qkLHXSb3vaRfiR74wSg6gkUr882gqTjYVvEfrDn27heDnhvzwjbv66XdFXMDMFIQQXXv",
-        cargo: "https://discordapp.com/api/webhooks/1487694906326777918/oddww0-WkogVL_fmx7rTgfsfiq0LKOxQj2XhnXRFZb8FCsBqJeewPQQiyYVasZNCygOn"
+        cargo: "https://discordapp.com/api/webhooks/1487694906326777918/oddww0-WkogVL_fmx7rTgfsfiq0LKOxQj2XhnXRFZb8FCsBqJeewPQQiyYVasZNCygOn",
     };
 
     const CLOUDINARY_CLOUD_NAME = "dci9bcb1u";
-    const CLOUDINARY_UPLOAD_PRESET = "mecanica";
+    const CLOUDINARY_UPLOAD_PRESET = "mecanico";
 
     async function uploadToCloudinary(file) {
         const formData = new FormData();
@@ -215,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==============================================================
     // -- Lógica de Toggles Dinâmicos de Pagamento (Forms 2 e 3) --
     // ==============================================================
-    
     function setupPaymentToggles(formPrefix) {
         const metodoSelect = document.getElementById(`${formPrefix}-pagamento-metodo`);
         const uiPix = document.getElementById(`${formPrefix}-pix-ui`);
@@ -330,7 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 let fieldsPayload = [];
                 const formData = new FormData(form);
-                let tipo = form.querySelector('input[name="Tipo"]')?.value || "Novo Protocolo BMI";
+                let tipoOriginal = form.querySelector('input[name="Tipo"]')?.value || "Novo Protocolo BMI";
+                let tipo = tipoOriginal;
 
                 let webhookUrl = WEBHOOKS.pagamento;
 
@@ -360,6 +360,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
+                let comissaoTexto = null;
+
+                // Comissão para compra de horas
+                if (tipoOriginal.toLowerCase().includes("horas")) {
+                    const valorHoras = parseFloat(
+                        (horasTotalHidden?.value || "0")
+                            .replace("R$", "")
+                            .replace(/\s/g, "")
+                            .replace(/\./g, "")
+                            .replace(",", ".")
+                    ) || 0;
+
+                    const comissao = valorHoras * 0.15;
+                    comissaoTexto = `R$ ${comissao.toFixed(2).replace(".", ",")}`;
+                }
+
+                // Comissão para compra de cargo
+                if (tipoOriginal.toLowerCase().includes("cargo")) {
+                    const metodoPagamento = document.getElementById('cargo-pagamento-metodo')?.value || "";
+
+                    if (metodoPagamento === "PIX") {
+                        const valorPixNum = parseFloat(
+                            (precoPixHidden?.value || "0")
+                                .replace("R$", "")
+                                .replace(/\s/g, "")
+                                .replace(/\./g, "")
+                                .replace(",", ".")
+                        ) || 0;
+
+                        const comissao = valorPixNum * 0.15;
+                        comissaoTexto = `R$ ${comissao.toFixed(2).replace(".", ",")}`;
+                    }
+
+                    if (metodoPagamento === "IN_GAME") {
+                        const valorIgNum = parseFloat(
+                            (precoIgHidden?.value || "0")
+                                .replace("$", "")
+                                .replace(/\s/g, "")
+                                .replace(/\./g, "")
+                                .replace(",", ".")
+                        ) || 0;
+
+                        const comissao = Math.floor(valorIgNum * 0.15);
+                        comissaoTexto = `$ ${comissao.toLocaleString('pt-BR')}`;
+                    }
+                }
+
                 for (let [key, value] of formData.entries()) {
                     if (key === "Tipo") continue;
 
@@ -379,6 +426,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             inline: true
                         });
                     }
+                }
+
+                if (comissaoTexto) {
+                    fieldsPayload.push({
+                        name: "📊 Comissão (15%)",
+                        value: comissaoTexto,
+                        inline: true
+                    });
                 }
 
                 uploadedFileUrls.forEach(fileData => {
