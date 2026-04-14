@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: tipo,
                     color: 16739072,
                     fields: fieldsPayload,
-                    footer: { text: "Sistema Corporativo BMI • Desenvolvido por Oliveira Strategic" },
+                    footer: { text: "Mecânica BMI • Desenvolvido por euarthurdso" },
                     timestamp: new Date().toISOString()
                 };
 
@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const discordPayload = {
-                    username: "Central de Serviços BMI",
+                    username: "Mecânica BMI",
                     embeds: [embedObj]
                 };
 
