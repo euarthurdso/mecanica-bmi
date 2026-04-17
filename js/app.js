@@ -170,9 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnCupom && cupomInput) {
         btnCupom.addEventListener('click', () => {
             const val = cupomInput.value.trim().toUpperCase();
-            if (val === 'MECPASCOA30') {
-                descActive = 0.30;
-                cupomMsg.innerText = '🐰 Cupom de 30% Aplicado com Sucesso!';
+            if (val === 'MECANICA26') {
+                descActive = 0.20;
+                cupomMsg.innerText = '🎉 Cupom de 20% aplicado com sucesso!';
                 cupomMsg.style.color = '#10B981';
             } else if (val !== '') {
                 descActive = 0;
